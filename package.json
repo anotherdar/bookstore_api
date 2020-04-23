@@ -1,0 +1,31 @@
+{
+  "name": "bookstore",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon -e js src/index.js",
+    "debug": "nodemon --inspect -e js src/index.js",
+    "test": "jest --watch --runInBand"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^25.4.0",
+    "nodemon": "^2.0.3",
+    "supertest": "^4.0.2"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.5.6",
+    "mongoose": "^5.9.9",
+    "multer": "^1.4.2",
+    "sharp": "^0.25.2",
+    "validator": "^13.0.0"
+  }
+}

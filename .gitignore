@@ -1,0 +1,8 @@
+node_modules/
+
+
+.env
+
+yarn.lock 
+
+jest.config.js
