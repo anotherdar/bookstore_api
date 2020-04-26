@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const {Cover} = require('./cover')
 
 const booksSchema = new mongoose.Schema({
     book_name: {
@@ -17,25 +18,23 @@ const booksSchema = new mongoose.Schema({
         type: String,
         default: 'No description added'
     },
-    book_cover: {
-        type: Buffer,
-        default: null
-    },
     book_owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
     }
-},{timestamps: true})
+},{timestamps: true, toJSON: {
+    virtuals: true
+}})
 
-booksSchema.methods.toJSON = function() {
+booksSchema.virtual('book_cover', {
+    ref: 'Cover',               
+    localField: '_id',         
+    foreignField: 'book_id' 
+}).get(function () {
     const book = this
-    const bookObject = book.toObject()
-
-    delete bookObject.book_cover
-
-    return bookObject
-}
+    return `http://localhost:8080/book/${book._id}/cover`
+})
 
 const Book = mongoose.model('Book', booksSchema)
 

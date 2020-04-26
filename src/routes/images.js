@@ -5,6 +5,7 @@ const sharp = require('sharp')
 
 const {User } = require('../models/user')
 const {Book} = require('../models/books')
+const {Cover } = require('../models/cover')
 
 const {auth} = require('../middleware/auth')
 
@@ -14,7 +15,7 @@ const upload = multer({
         fieldSize: 2000000
     },
     fileFilter(req, file, cb) {
-        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+        if(!file.originalname.match(/\.(jpg|jpeg|png|svg)$/)) {
             cb(new Error('File extension not supported. please provide a jpg, jpeg, or png file'))
         }
         cb(undefined, true)
@@ -71,13 +72,15 @@ router.delete('/user/me/avatar', auth, async (req, res) => {
 router.post('/book/:id/cover', auth, upload.single('cover'), async (req, res) => {
     const _id = req.params.id
     const book = await Book.findOne({_id, book_owner: req.user._id })
+    if(!book) throw new Error('Book not found')
+
     const buffer = await sharp(req.file.buffer).resize({
         width: 250,
         height: 350
     }).png().toBuffer()
 
-    book.book_cover = buffer
-    await book.save()
+    const cover = new Cover({book_cover: buffer, book_id: book._id})
+    await cover.save()
 
     res.send({message: 'success...'})
 
@@ -90,10 +93,11 @@ router.get('/book/:id/cover', async (req, res) => {
     try {
         const book = await Book.findById({_id: req.params.id})
         if(!book) throw new Error('Book not found')
-        else if (!book.book_cover) throw new Error('the following book does not contains any cover')
-        
+
+        const cover = await Cover.findOne({book_id: book._id})
+        if (!cover) throw new Error('the following book does not contains any cover')
         res.set('Content-Type', 'image/png')
-        res.send(book.book_cover)
+        res.send(cover.book_cover)
     } catch (e) {
         res.status(404).send({error: e.message})
     }

@@ -82,3 +82,7 @@ module.exports = {
     Users,
     setUpDataBase
 }
+
+test('not a test', () => {
+    console.log('running')
+})

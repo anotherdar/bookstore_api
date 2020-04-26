@@ -9,7 +9,7 @@ const {paginatedResults} = require('../middleware/pagination')
 router.post('/book', auth, async (req, res) => {
     const book = new Book({
         ...req.body, 
-        book_owner: req.user._id
+        book_owner: req.user._id,
     })
     try {
         await book.save()
