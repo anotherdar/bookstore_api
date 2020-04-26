@@ -80,6 +80,9 @@ router.post('/book/:id/cover', auth, upload.single('cover'), async (req, res) =>
     }).png().toBuffer()
 
     const cover = new Cover({book_cover: buffer, book_id: book._id})
+    book.book_cover = cover._id
+
+    await book.save()
     await cover.save()
 
     res.send({message: 'success...'})

@@ -22,19 +22,21 @@ const booksSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
+    },
+    book_cover: {
+        type: mongoose.Schema.Types.ObjectId,
+        default: null,
+        ref: 'Cover'
     }
 },{timestamps: true, toJSON: {
     virtuals: true
 }})
-
-booksSchema.virtual('book_cover', {
+booksSchema.virtual('book_cover_url', {
     ref: 'Cover',               
     localField: '_id',         
     foreignField: 'book_id' 
-}).get(function () {
-    const book = this
-    return `http://localhost:8080/book/${book._id}/cover`
 })
+
 
 const Book = mongoose.model('Book', booksSchema)
 
