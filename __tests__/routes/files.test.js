@@ -45,7 +45,7 @@ describe('book cover', () => {
             .attach('cover', '__tests__/__fixtures__/philly.jpg')
             .expect(200)
         const book = await Book.findById(Books[0]._id)
-        expect(book.book_cover).toEqual(expect.any(Buffer))
+        expect(book.book_cover).toEqual(`http://localhost:8080/book/${Books[0]._id}/cover`)
     })
     it('should not upload a cover photo to a book if the owner is not auth', async() => {
         await request(app)
